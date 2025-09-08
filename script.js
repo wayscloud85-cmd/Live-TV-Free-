@@ -7,7 +7,7 @@ const playLinkBtn = document.getElementById('playLinkBtn');
 function playStream(channel) {
   playerContainer.innerHTML = '';
 
-  // Check if channel is restricted
+  // Restricted channels
   if (channel.restricted) {
     const msg = document.createElement('div');
     msg.textContent = "⚠ Cannot play this channel: Restricted / Paid / Geo-blocked";
@@ -20,7 +20,6 @@ function playStream(channel) {
     return;
   }
 
-  // YouTube or iframe streams
   if (channel.url.includes("youtube.com") || channel.url.includes("ptvsportshd.net")) {
     const iframe = document.createElement('iframe');
     iframe.src = channel.url.includes("youtube.com")
@@ -32,7 +31,6 @@ function playStream(channel) {
     iframe.style.height = "500px";
     iframe.style.border = "0";
     playerContainer.appendChild(iframe);
-
   } else {
     const video = document.createElement('video');
     video.controls = true;
@@ -53,9 +51,8 @@ function playStream(channel) {
   playerContainer.scrollIntoView({ behavior: 'smooth' });
 }
 
-// All channels
+// Channels list with new last 3 sports channels
 const channels = [
-  // Sports
   {category:"Sports", name:"PTV Sports", url:"https://tvsen5.aynaott.com/Ptvsports/tracks-v1a1/mono.ts.m3u8", logo:"https://i.imgur.com/CPm6GHA.png"},
   {category:"Sports", name:"T Sports", url:"https://tvsen5.aynaott.com/tsports/tracks-v1a1/mono.ts.m3u8", logo:"https://i.postimg.cc/7PdvbtGt/T-Sports-logo-svg.png"},
   {category:"Sports", name:"GTV Sports", url:"https://tvsen5.aynaott.com/Ravc7gPCZpxk/tracks-v1a1/mono.ts.m3u8", logo:"https://i.postimg.cc/0yFRKtBy/gtv-live-cricket-logo.webp"},
@@ -65,12 +62,12 @@ const channels = [
   {category:"Sports", name:"Tamasha Live", url:"https://ptvsportshd.net/?p=1108/fvp-37/#fvp_37", logo:"https://i.postimg.cc/VLgm4F21/63c1e52872e94.jpg"},
   {category:"Sports", name:"Start Sports", url:"https://edge4-moblive.yuppcdn.net/drm1/smil:starsports2drm.smil/chunklist_b996000.m3u8", logo:"https://i.imgur.com/5En7pOI.png"},
 
-  // Last 3 channels restricted
-  {category:"Sports", name:"Willow", url:"https://muc100.myluck1.top:8088/live/webcricm05/playlist.m3u8", logo:"https://i.imgur.com/v7nSm7M.png", restricted:true},
-  {category:"Sports", name:"Sky Sports", url:"https://muc200.myluck1.top:8088/live/webcrice08/playlist.m3u8", logo:"https://i.imgur.com/SuTOqKi.png", restricted:true},
-  {category:"Sports", name:"GEO Super", url:"https://muc100.myluck1.top:8088/live/webcricp01/playlist.m3u8", logo:"https://upload.wikimedia.org/wikipedia/en/5/5f/Geo_Super_logo.png", restricted:true},
+  // Last 3 Sports channels (marked restricted)
+  {category:"Sports", name:"Willow", url:"https://muc100.myluck1.top:8088/live/webcricm05/playlist.m3u8?vidictid=20339551028&id=114516&pk=000affe68ec9acd1d17eeb194131da6682a44900efc9b36aa3b21deb9d24ceef39c843b93b1defb4b7a3903d45d34a8ed88e731251ea10467bd6e1d97bb27b4a", logo:"https://i.imgur.com/v7nSm7M.png", restricted:true},
+  {category:"Sports", name:"Sky Sports", url:"https://muc200.myluck1.top:8088/live/webcrice08/playlist.m3u8?vidictid=203393984899&id=116153&pk=000affe68ec9acd1d17eeb194131da6682a44900efc9b36aa3b21deb9d24ceef39c843b93b1defb4b7a3903d45d34a8ed88e731251ea10467bd6e1d97bb27b4a", logo:"https://i.imgur.com/SuTOqKi.png", restricted:true},
+  {category:"Sports", name:"GEO Super", url:"https://muc100.myluck1.top:8088/live/webcricp01/playlist.m3u8?vidictid=203391083934&id=113431&pk=000affe68ec9acd1d17eeb194131da6682a44900efc9b36aa3b21deb9d24ceef39c843b93b1defb4b7a3903d45d34a8ed88e731251ea10467bd6e1d97bb27b4a", logo:"https://upload.wikimedia.org/wikipedia/en/5/5f/Geo_Super_logo.png", restricted:true},
 
-  // News
+  // News channels
   {category:"News", name:"Geo News", url:"https://jk3lz82elw79-hls-live.5centscdn.com/newgeonews/07811dc6c422334ce36a09ff5cd6fe71.sdp/playlist.m3u8", logo:"https://i.imgur.com/Op4EsaB.png"},
   {category:"News", name:"Discover Pakistan", url:"https://livecdn.live247stream.com/discoverpakistan/web/playlist.m3u8", logo:"https://i.imgur.com/IJH47fJ.png"},
   {category:"News", name:"Dunia News", url:"https://imob.dunyanews.tv/livehd/ngrp:dunyalivehd_2_all/playlist.m3u8", logo:"https://i.postimg.cc/htHtP9VP/dunyanews.png"},
@@ -78,7 +75,7 @@ const channels = [
   {category:"News", name:"PTV News", url:"https://www.youtube.com/live/RJFJprClvlk?si=2ubPnVsZqsr63DXj", logo:"https://i.imgur.com/Fpn8VU7.png"}
 ];
 
-// Display channels
+// Display channels function
 function displayChannels() {
   channelContainer.innerHTML = '';
   const categories = [...new Set(channels.map(ch => ch.category))];
