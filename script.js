@@ -4,15 +4,28 @@ const customLinkInput = document.getElementById('customLink');
 const playLinkBtn = document.getElementById('playLinkBtn');
 
 // Play stream function
-function playStream(url, type="hls") {
+function playStream(channel) {
   playerContainer.innerHTML = '';
 
+  // Check if channel is restricted
+  if (channel.restricted) {
+    const msg = document.createElement('div');
+    msg.textContent = "⚠ Cannot play this channel: Restricted / Paid / Geo-blocked";
+    msg.style.color = "#FF5722";
+    msg.style.fontSize = "18px";
+    msg.style.textAlign = "center";
+    msg.style.padding = "50px 0";
+    playerContainer.appendChild(msg);
+    playerContainer.scrollIntoView({ behavior: 'smooth' });
+    return;
+  }
+
   // YouTube or iframe streams
-  if (url.includes("youtube.com") || url.includes("ptvsportshd.net")) {
+  if (channel.url.includes("youtube.com") || channel.url.includes("ptvsportshd.net")) {
     const iframe = document.createElement('iframe');
-    iframe.src = url.includes("youtube.com")
-      ? "https://www.youtube.com/embed/" + url.split("watch?v=")[1] + "?autoplay=1&controls=0"
-      : url;
+    iframe.src = channel.url.includes("youtube.com")
+      ? "https://www.youtube.com/embed/" + channel.url.split("watch?v=")[1] + "?autoplay=1&controls=0"
+      : channel.url;
     iframe.allow = "autoplay; encrypted-media";
     iframe.allowFullscreen = true;
     iframe.style.width = "100%";
@@ -20,17 +33,6 @@ function playStream(url, type="hls") {
     iframe.style.border = "0";
     playerContainer.appendChild(iframe);
 
-  // Last 3 channels workaround
-  } else if (type === "iframe") {
-    const iframe = document.createElement('iframe');
-    iframe.src = url; // Embed directly
-    iframe.allowFullscreen = true;
-    iframe.style.width = "100%";
-    iframe.style.height = "500px";
-    iframe.style.border = "0";
-    playerContainer.appendChild(iframe);
-
-  // HLS streams
   } else {
     const video = document.createElement('video');
     video.controls = true;
@@ -39,18 +41,21 @@ function playStream(url, type="hls") {
 
     if (Hls.isSupported()) {
       let hls = new Hls();
-      hls.loadSource(url);
+      hls.loadSource(channel.url);
       hls.attachMedia(video);
       hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
     } else {
-      video.src = url;
+      video.src = channel.url;
       video.play();
     }
   }
+
+  playerContainer.scrollIntoView({ behavior: 'smooth' });
 }
 
-// Channels including last 3 Sports
+// All channels
 const channels = [
+  // Sports
   {category:"Sports", name:"PTV Sports", url:"https://tvsen5.aynaott.com/Ptvsports/tracks-v1a1/mono.ts.m3u8", logo:"https://i.imgur.com/CPm6GHA.png"},
   {category:"Sports", name:"T Sports", url:"https://tvsen5.aynaott.com/tsports/tracks-v1a1/mono.ts.m3u8", logo:"https://i.postimg.cc/7PdvbtGt/T-Sports-logo-svg.png"},
   {category:"Sports", name:"GTV Sports", url:"https://tvsen5.aynaott.com/Ravc7gPCZpxk/tracks-v1a1/mono.ts.m3u8", logo:"https://i.postimg.cc/0yFRKtBy/gtv-live-cricket-logo.webp"},
@@ -60,10 +65,10 @@ const channels = [
   {category:"Sports", name:"Tamasha Live", url:"https://ptvsportshd.net/?p=1108/fvp-37/#fvp_37", logo:"https://i.postimg.cc/VLgm4F21/63c1e52872e94.jpg"},
   {category:"Sports", name:"Start Sports", url:"https://edge4-moblive.yuppcdn.net/drm1/smil:starsports2drm.smil/chunklist_b996000.m3u8", logo:"https://i.imgur.com/5En7pOI.png"},
 
-  // Last 3 channels - use iframe fallback
-  {category:"Sports", name:"Willow", url:"https://muc100.myluck1.top:8088/live/webcricm05/playlist.m3u8", logo:"https://i.imgur.com/v7nSm7M.png", type:"iframe"},
-  {category:"Sports", name:"Sky Sports", url:"https://muc200.myluck1.top:8088/live/webcrice08/playlist.m3u8", logo:"https://i.imgur.com/SuTOqKi.png", type:"iframe"},
-  {category:"Sports", name:"GEO Super", url:"https://muc100.myluck1.top:8088/live/webcricp01/playlist.m3u8", logo:"https://upload.wikimedia.org/wikipedia/en/5/5f/Geo_Super_logo.png", type:"iframe"},
+  // Last 3 channels restricted
+  {category:"Sports", name:"Willow", url:"https://muc100.myluck1.top:8088/live/webcricm05/playlist.m3u8", logo:"https://i.imgur.com/v7nSm7M.png", restricted:true},
+  {category:"Sports", name:"Sky Sports", url:"https://muc200.myluck1.top:8088/live/webcrice08/playlist.m3u8", logo:"https://i.imgur.com/SuTOqKi.png", restricted:true},
+  {category:"Sports", name:"GEO Super", url:"https://muc100.myluck1.top:8088/live/webcricp01/playlist.m3u8", logo:"https://upload.wikimedia.org/wikipedia/en/5/5f/Geo_Super_logo.png", restricted:true},
 
   // News
   {category:"News", name:"Geo News", url:"https://jk3lz82elw79-hls-live.5centscdn.com/newgeonews/07811dc6c422334ce36a09ff5cd6fe71.sdp/playlist.m3u8", logo:"https://i.imgur.com/Op4EsaB.png"},
@@ -91,7 +96,7 @@ function displayChannels() {
     channels.filter(ch => ch.category === cat).forEach(ch => {
       const div = document.createElement('div');
       div.className = 'channel';
-      div.onclick = () => playStream(ch.url, ch.type || "hls");
+      div.onclick = () => playStream(ch);
       div.innerHTML = `<img src="${ch.logo}" alt="${ch.name}"><div class="channel-name">${ch.name}</div>`;
       grid.appendChild(div);
     });
@@ -106,5 +111,5 @@ displayChannels();
 // Play custom link
 playLinkBtn.addEventListener('click', () => {
   const url = customLinkInput.value.trim();
-  if (url) playStream(url);
+  if (url) playStream({url, restricted:false});
 });
