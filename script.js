@@ -36,7 +36,7 @@ function playStream(url) {
   }
 }
 
-// Stable channels
+// All channels including last 3 Sports
 const channels = [
   // Sports
   {category:"Sports", name:"PTV Sports", url:"https://tvsen5.aynaott.com/Ptvsports/tracks-v1a1/mono.ts.m3u8", logo:"https://i.imgur.com/CPm6GHA.png"},
@@ -47,6 +47,9 @@ const channels = [
   {category:"Sports", name:"Ten Sports", url:"https://tapmadlive.akamaized.net/tapmadold/tensports.smil/chunklist_w1543578491_b1248000_slENG.m3u8", logo:"https://i.imgur.com/nnqpYNm.png"},
   {category:"Sports", name:"Tamasha Live", url:"https://ptvsportshd.net/?p=1108/fvp-37/#fvp_37", logo:"https://i.postimg.cc/VLgm4F21/63c1e52872e94.jpg"},
   {category:"Sports", name:"Start Sports", url:"https://edge4-moblive.yuppcdn.net/drm1/smil:starsports2drm.smil/chunklist_b996000.m3u8", logo:"https://i.imgur.com/5En7pOI.png"},
+  {category:"Sports", name:"Willow", url:"https://muc100.myluck1.top:8088/live/webcricm05/playlist.m3u8", logo:"https://i.imgur.com/v7nSm7M.png"},
+  {category:"Sports", name:"Sky Sports", url:"https://muc200.myluck1.top:8088/live/webcrice08/playlist.m3u8", logo:"https://i.imgur.com/SuTOqKi.png"},
+  {category:"Sports", name:"GEO Super", url:"https://muc100.myluck1.top:8088/live/webcricp01/playlist.m3u8", logo:"https://upload.wikimedia.org/wikipedia/en/5/5f/Geo_Super_logo.png"},
 
   // News
   {category:"News", name:"Geo News", url:"https://jk3lz82elw79-hls-live.5centscdn.com/newgeonews/07811dc6c422334ce36a09ff5cd6fe71.sdp/playlist.m3u8", logo:"https://i.imgur.com/Op4EsaB.png"},
@@ -56,7 +59,7 @@ const channels = [
   {category:"News", name:"PTV News", url:"https://www.youtube.com/live/RJFJprClvlk?si=2ubPnVsZqsr63DXj", logo:"https://i.imgur.com/Fpn8VU7.png"}
 ];
 
-// Display channels
+// Display channels by category
 function displayChannels() {
   channelContainer.innerHTML = '';
   const categories = [...new Set(channels.map(ch => ch.category))];
@@ -75,7 +78,7 @@ function displayChannels() {
       const div = document.createElement('div');
       div.className = 'channel';
       div.onclick = () => playStream(ch.url);
-      div.innerHTML = `<img src="${ch.logo}" alt=""><div class="channel-name">${ch.name}</div>`;
+      div.innerHTML = `<img src="${ch.logo}" alt="${ch.name}"><div class="channel-name">${ch.name}</div>`;
       grid.appendChild(div);
     });
 
@@ -83,7 +86,7 @@ function displayChannels() {
   });
 }
 
-// Initial load
+// Initial display
 displayChannels();
 
 // Play custom link
