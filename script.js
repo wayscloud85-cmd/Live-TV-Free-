@@ -7,19 +7,6 @@ const playLinkBtn = document.getElementById('playLinkBtn');
 function playStream(channel) {
   playerContainer.innerHTML = '';
 
-  // Restricted channels
-  if (channel.restricted) {
-    const msg = document.createElement('div');
-    msg.textContent = "⚠ Cannot play this channel: Restricted / Paid / Geo-blocked";
-    msg.style.color = "#FF5722";
-    msg.style.fontSize = "18px";
-    msg.style.textAlign = "center";
-    msg.style.padding = "50px 0";
-    playerContainer.appendChild(msg);
-    playerContainer.scrollIntoView({ behavior: 'smooth' });
-    return;
-  }
-
   if (channel.url.includes("youtube.com") || channel.url.includes("ptvsportshd.net")) {
     const iframe = document.createElement('iframe');
     iframe.src = channel.url.includes("youtube.com")
@@ -51,7 +38,7 @@ function playStream(channel) {
   playerContainer.scrollIntoView({ behavior: 'smooth' });
 }
 
-// Channels list with new last 3 sports channels
+// Channels list (all without restriction)
 const channels = [
   {category:"Sports", name:"PTV Sports", url:"https://tvsen5.aynaott.com/Ptvsports/tracks-v1a1/mono.ts.m3u8", logo:"https://i.imgur.com/CPm6GHA.png"},
   {category:"Sports", name:"T Sports", url:"https://tvsen5.aynaott.com/tsports/tracks-v1a1/mono.ts.m3u8", logo:"https://i.postimg.cc/7PdvbtGt/T-Sports-logo-svg.png"},
@@ -61,13 +48,10 @@ const channels = [
   {category:"Sports", name:"Ten Sports", url:"https://tapmadlive.akamaized.net/tapmadold/tensports.smil/chunklist_w1543578491_b1248000_slENG.m3u8", logo:"https://i.imgur.com/nnqpYNm.png"},
   {category:"Sports", name:"Tamasha Live", url:"https://ptvsportshd.net/?p=1108/fvp-37/#fvp_37", logo:"https://i.postimg.cc/VLgm4F21/63c1e52872e94.jpg"},
   {category:"Sports", name:"Start Sports", url:"https://edge4-moblive.yuppcdn.net/drm1/smil:starsports2drm.smil/chunklist_b996000.m3u8", logo:"https://i.imgur.com/5En7pOI.png"},
+  {category:"Sports", name:"Willow", url:"https://muc100.myluck1.top:8088/live/webcricm05/playlist.m3u8", logo:"https://i.imgur.com/v7nSm7M.png"},
+  {category:"Sports", name:"Sky Sports", url:"https://muc200.myluck1.top:8088/live/webcrice08/playlist.m3u8", logo:"https://i.imgur.com/SuTOqKi.png"},
+  {category:"Sports", name:"GEO Super", url:"https://muc100.myluck1.top:8088/live/webcricp01/playlist.m3u8", logo:"https://upload.wikimedia.org/wikipedia/en/5/5f/Geo_Super_logo.png"},
 
-  // Last 3 Sports channels (marked restricted)
-  {category:"Sports", name:"Willow", url:"https://muc100.myluck1.top:8088/live/webcricm05/playlist.m3u8?vidictid=20339551028&id=114516&pk=000affe68ec9acd1d17eeb194131da6682a44900efc9b36aa3b21deb9d24ceef39c843b93b1defb4b7a3903d45d34a8ed88e731251ea10467bd6e1d97bb27b4a", logo:"https://i.imgur.com/v7nSm7M.png", restricted:true},
-  {category:"Sports", name:"Sky Sports", url:"https://muc200.myluck1.top:8088/live/webcrice08/playlist.m3u8?vidictid=203393984899&id=116153&pk=000affe68ec9acd1d17eeb194131da6682a44900efc9b36aa3b21deb9d24ceef39c843b93b1defb4b7a3903d45d34a8ed88e731251ea10467bd6e1d97bb27b4a", logo:"https://i.imgur.com/SuTOqKi.png", restricted:true},
-  {category:"Sports", name:"GEO Super", url:"https://muc100.myluck1.top:8088/live/webcricp01/playlist.m3u8?vidictid=203391083934&id=113431&pk=000affe68ec9acd1d17eeb194131da6682a44900efc9b36aa3b21deb9d24ceef39c843b93b1defb4b7a3903d45d34a8ed88e731251ea10467bd6e1d97bb27b4a", logo:"https://upload.wikimedia.org/wikipedia/en/5/5f/Geo_Super_logo.png", restricted:true},
-
-  // News channels
   {category:"News", name:"Geo News", url:"https://jk3lz82elw79-hls-live.5centscdn.com/newgeonews/07811dc6c422334ce36a09ff5cd6fe71.sdp/playlist.m3u8", logo:"https://i.imgur.com/Op4EsaB.png"},
   {category:"News", name:"Discover Pakistan", url:"https://livecdn.live247stream.com/discoverpakistan/web/playlist.m3u8", logo:"https://i.imgur.com/IJH47fJ.png"},
   {category:"News", name:"Dunia News", url:"https://imob.dunyanews.tv/livehd/ngrp:dunyalivehd_2_all/playlist.m3u8", logo:"https://i.postimg.cc/htHtP9VP/dunyanews.png"},
@@ -108,5 +92,6 @@ displayChannels();
 // Play custom link
 playLinkBtn.addEventListener('click', () => {
   const url = customLinkInput.value.trim();
-  if (url) playStream({url, restricted:false});
+  if (url) playStream({url});
+});  if (url) playStream({url, restricted:false});
 });
