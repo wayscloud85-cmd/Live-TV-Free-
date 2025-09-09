@@ -4,7 +4,7 @@ const input = document.getElementById('customLink');
 const loadBtn = document.getElementById('loadBtn');
 let hls;
 
-// Built-in channels
+// Hardcoded channels
 let channelsData = [
   {category:"Sports", name:"DD Sports", url:"https://cdn-6.pishow.tv/live/13/master.m3u8", logo:"https://i.postimg.cc/3W5Mz7q7/DVag2TSu.jpg"},
   {category:"Sports", name:"Star Sports", url:"https://live20.bozztv.com/akamaissh101/ssh101/vboxsungosttamil/playlist.m3u8", logo:"https://i.imgur.com/dfLSnsZ.png"},
@@ -23,18 +23,6 @@ let channelsData = [
   {category:"News", name:"PTV News", url:"https://www.youtube.com/live/RJFJprClvlk?si=2ubPnVsZqsr63DXj", logo:"https://i.imgur.com/Fpn8VU7.png"}
 ];
 
-// --- Helper: Guess category by channel name ---
-function guessCategory(name){
-  name = name.toLowerCase();
-  if(name.includes("sport")) return "Sports";
-  if(name.includes("news")) return "News";
-  if(name.includes("music") || name.includes("mtv")) return "Music";
-  if(name.includes("movie") || name.includes("cinema") || name.includes("hollywood")) return "Movies";
-  if(name.includes("kid") || name.includes("cartoon") || name.includes("disney")) return "Kids";
-  return "Playlist"; // fallback
-}
-
-// --- Play a stream ---
 function playStream(url){
   playerContainer.innerHTML='';
   const video = document.createElement('video');
@@ -46,14 +34,11 @@ function playStream(url){
     hls.loadSource(url); 
     hls.attachMedia(video); 
     hls.on(Hls.Events.MANIFEST_PARSED, ()=>video.play()); 
-  } else { 
-    video.src = url; 
-    video.play(); 
-  }
+  } else { video.src = url; video.play(); }
   playerContainer.scrollIntoView({behavior:'smooth'});
 }
 
-// --- Load M3U playlist and auto-sort ---
+// Parse external M3U and merge with channels
 async function loadPlaylist(url){
   try{
     const res = await fetch(url);
@@ -69,19 +54,16 @@ async function loadPlaylist(url){
         const logoMatch = line.match(/tvg-logo="(.*?)"/);
         if(logoMatch) logo = logoMatch[1];
       } else if(line && !line.startsWith("#")){
-        const category = guessCategory(name);
-        newChannels.push({category, name, url:line, logo});
+        newChannels.push({category:"Playlist", name, url:line, logo});
         name = "Unknown"; logo = "";
       }
     }
-    channelsData = [...channelsData, ...newChannels]; 
+    channelsData = [...channelsData, ...newChannels]; // merge playlist channels
     displayChannels(channelsData);
-  }catch(err){ 
-    alert("Failed to load playlist: "+err); 
-  }
+  }catch(err){ alert("Failed to load playlist: "+err); }
 }
 
-// --- Render channels by category ---
+// Display all channels grouped by category
 function displayChannels(data){
   channelContainer.innerHTML='';
   const categories = [...new Set(data.map(ch=>ch.category))];
@@ -108,7 +90,7 @@ function displayChannels(data){
   });
 }
 
-// --- Button action ---
+// Button action
 loadBtn.addEventListener('click', ()=>{
   const url = input.value.trim();
   if(!url) return;
@@ -117,6 +99,6 @@ loadBtn.addEventListener('click', ()=>{
   else alert("Please enter a valid M3U or M3U8 link");
 });
 
-// --- Init ---
+// Initial render
 displayChannels(channelsData);
 playStream(channelsData[0].url);
