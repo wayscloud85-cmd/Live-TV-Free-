@@ -1,25 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>IPTV Player</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live IPTV Grid Player</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
 <body>
-  <header>
-    <h1>📺 IPTV Web Player</h1>
-    <div class="input-box">
-      <input type="text" id="customLink" placeholder="Enter .m3u or .m3u8 link">
-      <button id="loadBtn">Load</button>
-    </div>
-  </header>
 
-  <main>
-    <div id="player-container"></div>
-    <div id="channelContainer"></div>
-  </main>
+<header>
+  <h1>Live IPTV Grid Player</h1>
+</header>
 
-  <script src="script.js"></script>
+<div class="top-controls">
+  <input type="text" id="customLink" placeholder="Enter M3U8 link or M3U playlist URL">
+  <button id="loadBtn">Play / Load</button>
+  <button id="toggleChannelsBtn">Show / Hide Channels</button>
+</div>
+
+<section id="player-container"></section>
+<section id="channelContainer"></section>
+
+<footer>© 2025 Live IPTV Grid. All rights reserved.</footer>
+
+<script src="script.js"></script>
 </body>
 </html>
