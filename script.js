@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const loadBtn = document.getElementById('loadBtn');
   let hls;
 
-  // --- Default Channels (all from your earlier list) ---
+  // --- Default Channels (All your provided channels) ---
   let channelsData = [
     // Sports
     {category:"Sports", name:"DD Sports", url:"https://cdn-6.pishow.tv/live/13/master.m3u8", logo:"https://i.postimg.cc/3W5Mz7q7/DVag2TSu.jpg"},
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     {category:"News", name:"PTV News", url:"https://www.youtube.com/live/RJFJprClvlk?si=2ubPnVsZqsr63DXj", logo:"https://i.imgur.com/Fpn8VU7.png"}
   ];
 
-  // --- Guess Category from Name (for playlists) ---
+  // --- Category detection for M3U ---
   function guessCategory(name){
     name = name.toLowerCase();
     if(name.includes("sport")) return "Sports";
@@ -44,6 +44,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const video = document.createElement('video');
     video.controls = true;
     video.autoplay = true;
+    video.style.width = "100%";
+    video.style.height = "100%";
     playerContainer.appendChild(video);
 
     if(Hls.isSupported()){ 
