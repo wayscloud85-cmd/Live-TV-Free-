@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const loadBtn = document.getElementById('loadBtn');
   let hls;
 
-  // --- Default Channels (All your provided channels) ---
+  // --- Full Channel List ---
   let channelsData = [
     // Sports
     {category:"Sports", name:"DD Sports", url:"https://cdn-6.pishow.tv/live/13/master.m3u8", logo:"https://i.postimg.cc/3W5Mz7q7/DVag2TSu.jpg"},
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     {category:"News", name:"PTV News", url:"https://www.youtube.com/live/RJFJprClvlk?si=2ubPnVsZqsr63DXj", logo:"https://i.imgur.com/Fpn8VU7.png"}
   ];
 
-  // --- Category detection for M3U ---
+  // --- Category Detection ---
   function guessCategory(name){
     name = name.toLowerCase();
     if(name.includes("sport")) return "Sports";
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return "Playlist";
   }
 
-  // --- Play Stream ---
+  // --- Play Stream (Full-screen mobile optimized) ---
   function playStream(url){
     playerContainer.innerHTML='';
     const video = document.createElement('video');
@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
     video.autoplay = true;
     video.style.width = "100%";
     video.style.height = "100%";
+    video.style.maxHeight = "80vh"; // mobile-friendly height
     playerContainer.appendChild(video);
 
     if(Hls.isSupported()){ 
@@ -115,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // --- Load Button Action ---
+  // --- Load Button ---
   loadBtn.addEventListener('click', ()=>{
     const url = input.value.trim();
     if(!url) return;
