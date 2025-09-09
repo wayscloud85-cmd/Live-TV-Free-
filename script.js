@@ -2,6 +2,7 @@ const playerContainer = document.getElementById('player-container');
 const channelContainer = document.getElementById('channelContainer');
 const input = document.getElementById('customLink');
 const loadBtn = document.getElementById('loadBtn');
+const toggleChannelsBtn = document.getElementById('toggleChannelsBtn');
 let hls;
 
 // Hardcoded channels
@@ -23,22 +24,72 @@ let channelsData = [
   {category:"News", name:"PTV News", url:"https://www.youtube.com/live/RJFJprClvlk?si=2ubPnVsZqsr63DXj", logo:"https://i.imgur.com/Fpn8VU7.png"}
 ];
 
+// Play stream
 function playStream(url){
   playerContainer.innerHTML='';
   const video = document.createElement('video');
   video.controls = true;
   video.autoplay = true;
+  video.style.width = "100%";
+  video.style.height = "80vh";
   playerContainer.appendChild(video);
+
   if(Hls.isSupported()){ 
     hls = new Hls(); 
     hls.loadSource(url); 
     hls.attachMedia(video); 
     hls.on(Hls.Events.MANIFEST_PARSED, ()=>video.play()); 
   } else { video.src = url; video.play(); }
-  playerContainer.scrollIntoView({behavior:'smooth'});
 }
 
-// Load M3U playlist
+// Display channels (hidden initially)
+function displayChannels(data){
+  channelContainer.innerHTML='';
+  const categories = [...new Set(data.map(ch=>ch.category))];
+  categories.forEach(cat=>{
+    const title = document.createElement('div'); 
+    title.className='category-title'; 
+    title.textContent=cat;
+    channelContainer.appendChild(title);
+
+    const grid = document.createElement('div'); 
+    grid.className='channel-grid';
+
+    data.filter(ch=>ch.category===cat).forEach(ch=>{
+      const div = document.createElement('div'); 
+      div.className='channel'; 
+      div.dataset.url=ch.url;
+      div.innerHTML = `<img src="${ch.logo || 'https://via.placeholder.com/120x80?text=TV'}" alt="${ch.name}"><div class="channel-name">${ch.name}</div>`;
+      div.addEventListener('click', ()=>playStream(ch.url));
+      grid.appendChild(div);
+    });
+
+    channelContainer.appendChild(grid);
+  });
+  channelContainer.style.display = 'none'; // hidden initially
+}
+
+// Toggle channels
+function toggleChannels(){
+  if(channelContainer.style.display === 'none'){
+    channelContainer.style.display = 'block';
+    channelContainer.scrollIntoView({behavior:'smooth'});
+  } else {
+    channelContainer.style.display = 'none';
+  }
+}
+
+// Event listeners
+toggleChannelsBtn.addEventListener('click', toggleChannels);
+loadBtn.addEventListener('click', ()=>{
+  const url = input.value.trim();
+  if(!url) return;
+  if(url.endsWith(".m3u")) loadPlaylist(url);
+  else if(url.endsWith(".m3u8")) playStream(url);
+  else alert("Please enter a valid M3U or M3U8 link");
+});
+
+// Optional: load external M3U playlist
 async function loadPlaylist(url){
   try{
     const res = await fetch(url);
@@ -63,33 +114,6 @@ async function loadPlaylist(url){
   }catch(err){ alert("Failed to load playlist: "+err); }
 }
 
-// Display channels
-function displayChannels(data){
-  channelContainer.innerHTML='';
-  const categories = [...new Set(data.map(ch=>ch.category))];
-  categories.forEach(cat=>{
-    const title = document.createElement('div'); title.className='category-title'; title.textContent=cat;
-    channelContainer.appendChild(title);
-    const grid = document.createElement('div'); grid.className='channel-grid';
-    data.filter(ch=>ch.category===cat).forEach(ch=>{
-      const div = document.createElement('div'); div.className='channel'; div.dataset.url=ch.url;
-      div.innerHTML = `<img src="${ch.logo || 'https://via.placeholder.com/120x80?text=TV'}" alt="${ch.name}"><div class="channel-name">${ch.name}</div>`;
-      div.addEventListener('click', ()=>playStream(ch.url));
-      grid.appendChild(div);
-    });
-    channelContainer.appendChild(grid);
-  });
-}
-
-// Button event
-loadBtn.addEventListener('click', ()=>{
-  const url = input.value.trim();
-  if(!url) return;
-  if(url.endsWith(".m3u")) loadPlaylist(url);
-  else if(url.endsWith(".m3u8")) playStream(url);
-  else alert("Please enter a valid M3U or M3U8 link");
-});
-
-// Initialize
+// Initialize player
 displayChannels(channelsData);
 playStream(channelsData[0].url);
