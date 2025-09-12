@@ -2,28 +2,37 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Live IPTV Grid Player</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IPTV Player — All Channels</title>
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
 <body>
-
 <header>
-  <h1>Live IPTV Grid Player</h1>
+<h1>📺 IPTV Player</h1>
 </header>
-
-<div class="top-controls">
-  <input type="text" id="customLink" placeholder="Enter M3U8 link or M3U playlist URL">
-  <button id="loadBtn">Play / Load</button>
-  <button id="toggleChannelsBtn">Show / Hide Channels</button>
+<main>
+<div class="category-bar">
+  <input type="text" id="search-input" placeholder="Search channels...">
+  <div id="total-count">Total Channels: 0</div>
+  <button class="cat-btn sports" onclick="renderChannels('Sports')">Sports</button>
+  <button class="cat-btn news" onclick="renderChannels('News')">News</button>
+  <button class="cat-btn entertainment" onclick="renderChannels('Entertainment')">Entertainment</button>
+  <button class="cat-btn documentary" onclick="renderChannels('Documentary')">Documentary</button>
 </div>
 
-<section id="player-container"></section>
-<section id="channelContainer"></section>
+<section id="channels-view">
+  <div id="channels-root"></div>
+</section>
 
-<footer>© 2025 Live IPTV Grid. All rights reserved.</footer>
+<section id="player-view">
+  <div id="related-channels"></div>
+  <video id="video" controls playsinline></video>
+  <button id="back-btn">← Back to Channels</button>
+</section>
+</main>
 
-<script src="script.js"></script>
+<script src="channels.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
